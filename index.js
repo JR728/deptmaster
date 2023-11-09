@@ -83,12 +83,13 @@ function viewDepartments() {
       }
       // Process and display the results in a formatted table
       console.table(results);
+      promptUserAgain();
     });
   }
   
   // Function to view all roles
   function viewRoles() {
-    const query = 'SELECT id, title, salary, deparment_id FROM role';
+    const query = 'SELECT id, title, salary, department_id FROM role';
     db.query(query, (err, results) => {
       if (err) {
         console.error('Error fetching roles:', err);
@@ -96,6 +97,7 @@ function viewDepartments() {
       }
       // Process and display the results in a formatted table
       console.table(results);
+      promptUserAgain();
     });
   }
   
@@ -109,6 +111,7 @@ function viewDepartments() {
       }
       // Process and display the results in a formatted table
       console.table(results);
+      promptUserAgain();
     });
   }
   
@@ -130,6 +133,7 @@ function viewDepartments() {
             return;
           }
           console.log('Department added successfully.');
+          promptUserAgain();
         });
       });
   }
@@ -162,6 +166,7 @@ function addRole() {
             return;
           }
           console.log('Role added successfully.');
+          promptUserAgain();
         });
       });
   }
@@ -199,6 +204,7 @@ function addRole() {
             return;
           }
           console.log('Employee added successfully.');
+          promptUserAgain();
         });
       });
   }
@@ -239,8 +245,27 @@ function addRole() {
               return;
             }
             console.log('Employee role updated successfully.');
+            promptUserAgain();
           });
         });
     });
   }
-  
+  function promptUserAgain() {
+    inquirer
+      .prompt([
+        {
+          type: 'confirm',
+          name: 'continue',
+          message: 'Do you want to do something else?',
+          default: true,
+        },
+      ])
+      .then((answer) => {
+        if (answer.continue) {
+          startApp(); // If the user wants to continue, show the main menu again
+        } else {
+          console.log('Goodbye!');
+          db.end(); // If the user wants to exit, close the database connection
+        }
+      });
+  }
